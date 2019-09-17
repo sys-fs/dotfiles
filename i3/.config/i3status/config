@@ -1,0 +1,24 @@
+general {
+	output_format = "i3bar"
+	colors = true
+	interval = 1
+}
+
+order += "ethernet eno1"
+order += "path_exists VPN"
+order += "tztime local"
+
+ethernet eno1 {
+        # if you use %speed, i3status requires root privileges
+        format_up = "E: %ip (%speed)"
+        format_down = "E: down"
+}
+
+path_exists VPN {
+        path = "/proc/sys/net/ipv4/conf/tun0"
+}
+
+tztime local {
+        format = "%Y-%m-%d %H:%M:%S"
+}
+
