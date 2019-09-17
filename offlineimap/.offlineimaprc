@@ -1,0 +1,25 @@
+[general]
+accounts = work
+maxsyncaccounts = 1
+
+[Account work]
+localrepository = work-local
+remoterepository = work-remote
+synclabels = yes
+autorefresh = 0.5
+quick = 10
+postsynchook = mu index --maildir ~/maildir
+
+[Repository work-local]
+type = Maildir
+localfolders = ~/maildir/work
+
+[Repository work-remote]
+type = Gmail
+maxconnections = 2
+remoteuser = thomas@adaptive.co.uk
+remotepasseval = get_work_pass()
+folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail', '[Gmail]/Important']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+keepalive = 60
+holdconnectionopen = yes
