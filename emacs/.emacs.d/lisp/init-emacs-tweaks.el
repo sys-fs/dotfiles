@@ -20,6 +20,8 @@
 (electric-indent-mode t)
 (auto-fill-mode 1)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 (setq-default save-place t
 	      fill-column 79
 	      tab-width 8)
