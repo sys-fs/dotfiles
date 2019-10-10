@@ -1,6 +1,7 @@
 [general]
 accounts = work
 maxsyncaccounts = 1
+pythonfile = ~/.offlineimap.py
 
 [Account work]
 localrepository = work-local
@@ -8,10 +9,10 @@ remoterepository = work-remote
 synclabels = yes
 autorefresh = 0.5
 quick = 10
-postsynchook = mu index --maildir ~/maildir
+postsynchook = emacsclient -e '(mu4e-update-index)'
 
 [Repository work-local]
-type = Maildir
+type = GmailMaildir
 localfolders = ~/maildir/work
 
 [Repository work-remote]

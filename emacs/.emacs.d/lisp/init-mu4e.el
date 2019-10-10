@@ -12,8 +12,7 @@
       smtpmail-smtp-server "smtp.gmail.com"
       smtpmail-smtp-service 587
       message-send-mail-function 'smtpmail-send-it
-      mu4e-sent-messages-behavior 'delete
-      mu4e-get-mail-command "offlineimap")
+      mu4e-sent-messages-behavior 'delete)
 
 (defvar my-mu4e-account-alist '(("work"
 				 (mu4e-sent-folder "/work/[Gmail].Sent Mail")

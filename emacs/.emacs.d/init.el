@@ -1,3 +1,6 @@
+;;; init --- Initialise Emacs
+;;; Commentary:
+;;; Code:
 (setq debug-on-error t)
 
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
@@ -8,6 +11,7 @@
 (require 'init-packages)
 
 (require 'init-company)
+(require 'init-flycheck)
 (require 'init-git)
 (require 'init-helm)
 (require 'init-emacs-tweaks)
