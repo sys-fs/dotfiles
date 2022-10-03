@@ -4,28 +4,15 @@
 
 (require 'php-mode)
 
-(add-hook 'php-mode-hook 'php-enable-drupal-coding-style)
+(add-to-list 'auto-mode-alist '("\\.module$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.theme$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.install$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.profile$" . php-mode))
 
-;; (add-hook 'php-mode-hook
-;;           '(lambda ()
-;;              ;; Enable company-mode
-;;              (company-mode t)
-;;              (require 'company-php)
+(define-key json-mode-map (kbd "C-c C-c") 'composer-update)
 
-;;              ;; Enable ElDoc support (optional)
-;;              (ac-php-core-eldoc-setup)
-
-;;              (set (make-local-variable 'company-backends)
-;;                   '((company-ac-php-backend company-dabbrev-code)
-;;                     company-capf company-files))
-
-;;              ;; Jump to definition (optional)
-;;              (define-key php-mode-map (kbd "M-]")
-;;                'ac-php-find-symbol-at-point)
-
-;;              ;; Return back (optional)
-;;              (define-key php-mode-map (kbd "M-[")
-;;                'ac-php-location-stack-back)))
+(add-hook 'php-mode-hook (drupal-mode))
 
 (provide 'init-php)
-;;; init-php ends here
+;;; init-php.el ends here

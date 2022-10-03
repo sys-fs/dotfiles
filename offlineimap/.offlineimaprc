@@ -1,26 +1,51 @@
 [general]
-accounts = work
-maxsyncaccounts = 1
+accounts = disroot, airmail
 pythonfile = ~/.offlineimap.py
 
-[Account work]
-localrepository = work-local
-remoterepository = work-remote
+[Account disroot]
+localrepository = disroot-local
+remoterepository = disroot-remote
 synclabels = yes
-autorefresh = 0.5
+autorefresh = 15
 quick = 10
 postsynchook = emacsclient -e '(mu4e-update-index)'
 
-[Repository work-local]
-type = GmailMaildir
-localfolders = ~/maildir/work
+[Repository disroot-local]
+type = Maildir
+localfolders = ~/maildir/disroot
 
-[Repository work-remote]
-type = Gmail
+[Repository disroot-remote]
+type = IMAP
+remotehost = disroot.org
+ssl = yes
 maxconnections = 2
-remoteuser = thomas@adaptive.co.uk
-remotepasseval = get_work_pass()
-folderfilter = lambda foldername: foldername not in ['[Gmail]/All Mail', '[Gmail]/Important']
+remoteuser = tfm@disroot.org
+remotepasseval = get_pass("disroot.org")
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 keepalive = 60
 holdconnectionopen = yes
+
+[Account airmail]
+localrepository = airmail-local
+remoterepository = airmail-remote
+synclabels = yes
+autorefresh = 15
+quick = 10
+postsynchook = emacsclient -e '(mu4e-update-index)'
+
+[Repository airmail-local]
+type = Maildir
+localfolders = ~/maildir/airmail
+
+[Repository airmail-remote]
+type = IMAP
+remotehost = airmail.org
+ssl = yes
+maxconnections = 2
+remoteuser = tfm@airmail.cc
+remotepasseval = get_pass("airmail.cc")
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+keepalive = 60
+holdconnectionopen = yes
+
+

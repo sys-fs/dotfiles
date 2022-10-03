@@ -1,6 +1,10 @@
+(require 'poetry)
+
 (elpy-enable)
 
-(setq elpy-rpc-python-command "python3"
-      python-shell-interpreter "python3")
+(setq flycheck-python-pycompile-executable "python3")
+(setq flycheck-python-flake8-executable "python3")
+
+(add-hook 'python-mode-hook 'poetry-tracking-mode)
 
 (provide 'init-python)

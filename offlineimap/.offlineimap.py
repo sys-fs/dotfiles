@@ -2,5 +2,5 @@
 from subprocess import check_output
 
 
-def get_work_pass():
-    return check_output('gpg -dq ~/.work-pass.gpg', shell=True).strip('\n')
+def get_pass(account):
+    return check_output("pass Email/" + account, shell=True).splitlines()[0]
