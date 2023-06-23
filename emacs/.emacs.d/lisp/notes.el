@@ -1,9 +1,10 @@
 (use-package org-roam
+  :demand t
   :config
   (mapc (lambda (directory)
 	  (unless (file-exists-p directory)
 	    (make-directory directory)))
-	'("~/org-roam" "~/org-roam/main" "~/org-roam/reference" "~/org-roam/articles"))
+	'("~/org-roam" "~/org-roam/main" "~/org-roam/reference" "~/org-roam/articles" "~/org-roam/topic"))
   (cl-defmethod org-roam-node-type ((node org-roam-node))
     "Return the TYPE of NODE."
     (condition-case nil
@@ -33,6 +34,11 @@
 				      (file+head "reference/${title}.org" "#+title: ${title}\n")
 				      :immediate-finish t
 				      :unnarrowed t)
+				     ("t" "topic" plain "%?"
+				      :if-new
+				      (file+head "topic/${title}.org" "#+title: ${title}\n")
+				      :immediate-finish t
+				      :unnarrowed t)
 				     ("a" "article" plain "%?"
 				      :if-new
 				      (file+head "articles/${title}.org" "#+title: ${title}\n#+filetags: :article:\n")
@@ -49,17 +55,12 @@
   :bind
   (:map ergoemacs-user-keymap ("<menu> r" . tfm/org-roam-command-map)))
 
-(use-package ox-reveal)
+(use-package ox-reveal
+  :demand t)
 
-(use-package org
+(use-package org-ref
+  :demand t
   :config
-  (setq org-agenda-files '("~/org")
-	org-priority-default ?C
-	org-priority-lowest ?E
-	org-todo-keywords '((sequence "BACKLOG" "TODO" "IN PROGRESS" "WAITING" "VALIDATING" "|" "DONE")))
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((php . t)
-     (emacs-lisp . t))))
+  (setq bibtex-completion-bibliography '("~/org-roam/bibliography.bib")))
 
-(provide 'init-org)
+(provide 'notes)
