@@ -81,9 +81,11 @@
   :hook ((c-mode-common-hook . (lambda ()
 				(setq indent-tabs-mode t)
 				(c-set-style "linux")))))
+
 ;; Common Lisp
 (use-package slime
   :demand t
+  :ensure-system-package sbcl
   :config
   (setq inferior-lisp-program "sbcl")
   (slime-setup '(slime-fancy)))
@@ -91,27 +93,62 @@
 ;; Python
 (use-package elpy
   :demand t
-  :config (elpy-enable))
+  :init (elpy-enable))
 
 (use-package poetry
+  :if (eq system-type 'darwin)
   :demand t
+  :ensure-system-package (poetry . "pip3 install poetry")
+  :hook (python-mode-hook . poetry-tracking-mode))
+
+(use-package poetry
+  :if (eq system-type 'gnu/linux)
+  :demand t
+  :ensure-system-package ("~/.local/bin/poetry" . "pip3 install --user poetry")
   :hook (python-mode-hook . poetry-tracking-mode))
 
 ;; Terraform
 (use-package terraform-mode
+  :if (eq system-type 'darwin)
   :demand t
+  :ensure-system-package hashicorp/tap/terraform
   :hook (terraform-mode-hook . terraform-format-on-save-mode))
 
-;; YAML and friends
+(use-package terraform-mode
+  :if (eq system-type 'gnu/linux)
+  :demand t
+  :ensure-system-package terraform
+  :hook (terraform-mode-hook . terraform-format-on-save-mode))
+
+;; Markup
+(use-package markdown-mode
+  :demand t)
+
+;; Data formats
+(use-package json-mode
+  :demand t)
+
 (use-package yaml-mode
   :demand t)
 
+;; Ansible
 (use-package ansible
+  :if (eq system-type 'darwin)
   :demand t
+  :ensure-system-package ansible
+  :hook (yaml-mode-hook . ansible))
+
+(use-package ansible
+  :if (eq system-type 'gnu/linux)
+  :demand t
+  :ensure-system-package ("~/.local/bin/ansible" . "pip3 install --user ansible")
   :hook (yaml-mode-hook . ansible))
 
 (use-package ansible-doc
   :demand t
   :hook (yaml-mode-hook . ansible-doc-mode))
+
+(use-package jinja2-mode
+  :demand t)
 
 (provide 'languages)

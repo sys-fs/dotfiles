@@ -46,80 +46,9 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
-;; (require 'package)
-;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-;; 			 ("gnu" . "http://elpa.gnu.org/packages/")))
-;; (package-initialize)
-;; (package-refresh-contents)
+(use-package use-package-ensure-system-package
+  :demand t)
 
-;; (mapc (lambda (package)
-;; 	(unless (package-installed-p package)
-;; 	  (package-install package)))
-;;       '(ansible
-;; 	ansible-doc
-;; 	ansible-vault
-;; 	all-the-icons
-;; 	avy
-;;         centaur-tabs
-;;         company
-;;         company-quickhelp
-;;         company-statistics
-;; 	composer
-;; 	dashboard
-;; 	doom-modeline
-;; 	drag-stuff
-;; 	drupal-mode
-;; 	edit-server
-;; 	eldoc
-;; 	elpy
-;; 	ergoemacs-mode
-;; 	eshell-prompt-extras
-;; 	eshell-syntax-highlighting
-;; 	eshell-up
-;; 	exec-path-from-shell
-;; 	feature-mode
-;; 	flycheck
-;;         go-mode
-;; 	google-this
-;; 	helm
-;; 	helm-lsp
-;; 	helm-pass
-;; 	helm-slime
-;; 	helm-system-packages
-;; 	htmlize
-;; 	jinja2-mode
-;; 	json-mode
-;; 	ledger-mode
-;; 	lsp-mode
-;; 	lsp-ui
-;; 	magit
-;; 	markdown-mode
-;; 	nerd-icons
-;; 	ob-php
-;; 	org-ref
-;; 	org-roam
-;; 	org-roam-ui
-;; 	ox-reveal
-;; 	password-store
-;;         php-mode
-;; 	poetry
-;; 	projectile
-;; 	rainbow-delimiters
-;; 	rainbow-mode
-;; 	ranger
-;; 	restclient
-;; 	ripgrep
-;;         smartparens
-;; 	solarized-theme
-;; 	slime
-;; 	slime-company
-;; 	terraform-mode
-;; 	use-package
-;; 	visual-regexp-steroids
-;; 	which-key
-;; 	yaml-mode
-;; 	yasnippet
-;; 	yasnippet-snippets
-;; 	zoom))
+(elpaca-wait)
 
-(provide 'init-elpaca)
+(provide 'package-init)

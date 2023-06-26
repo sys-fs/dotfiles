@@ -5,7 +5,7 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file 'noerror)
 
-(require 'elpaca)
+(require 'package-init)
 (require 'interaction)
 (require 'interface)
 (require 'notes)

@@ -2,6 +2,10 @@
   :demand t
   :if (display-graphic-p))
 
+(use-package buffer-name-relative
+  :demand t
+  :init (buffer-name-relative-mode))
+
 (use-package dashboard
   :demand t
   :init
@@ -41,7 +45,6 @@
 
 (use-package doom-modeline
   :demand t
-  :ensure t
   :init
   (doom-modeline-mode 1))
 
