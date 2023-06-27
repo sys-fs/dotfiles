@@ -29,12 +29,7 @@
 	)
   :config (unbind-key "<mouse-3>" lsp-mode-map)
   ;;  (add-to-list 'lsp--formatting-indent-alist '(php-mode . 2))
-  :hook ((php-mode . lsp)
-	 (python-mode . lsp)
-	 (ansible . lsp)
-	 (terraform-mode . lsp)
-         ;; if you want which-key integration
-         (lsp-mode . lsp-enable-which-key-integration))
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
   :bind
   (:map lsp-mode-map ([<mouse-3>] . mouse-save-then-kill))
   :commands lsp)
@@ -76,7 +71,7 @@
 ;;; languages
 
 ;; C
-(use-package emacs
+(use-package cc-mode
   :elpaca nil
   :hook ((c-mode-common-hook . (lambda ()
 				(setq indent-tabs-mode t)
@@ -95,30 +90,40 @@
   :demand t
   :init (elpy-enable))
 
-(use-package poetry
-  :if (eq system-type 'darwin)
-  :demand t
-  :ensure-system-package (poetry . "pip3 install poetry")
-  :hook (python-mode-hook . poetry-tracking-mode))
+(use-package python-mode
+  :elpaca nil
+  :hook (python-mode . lsp-deferred))
 
-(use-package poetry
-  :if (eq system-type 'gnu/linux)
+(if (eq system-type 'darwin)
+    (use-package poetry
+      :demand t
+      :ensure-system-package ("/opt/homebrew/bin/poetry" . "pip3 install poetry")
+      :hook (python-mode-hook . poetry-tracking-mode))
+  (use-package poetry
+    :demand t
+    :ensure-system-package ("~/.local/bin/poetry" . "pip3 install --user poetry")
+    :hook (python-mode-hook . poetry-tracking-mode)))
+
+;; Golang
+(use-package go-mode
   :demand t
-  :ensure-system-package ("~/.local/bin/poetry" . "pip3 install --user poetry")
-  :hook (python-mode-hook . poetry-tracking-mode))
+  :ensure-system-package ((go . go)
+			  ("~/go/bin/gopls" . "go install golang.org/x/tools/gopls@latest"))
+  :hook ((go-mode . lsp-deferred)
+	 (go-mode . gofmt-before-save)))
 
 ;; Terraform
-(use-package terraform-mode
-  :if (eq system-type 'darwin)
-  :demand t
-  :ensure-system-package hashicorp/tap/terraform
-  :hook (terraform-mode-hook . terraform-format-on-save-mode))
-
-(use-package terraform-mode
-  :if (eq system-type 'gnu/linux)
-  :demand t
-  :ensure-system-package terraform
-  :hook (terraform-mode-hook . terraform-format-on-save-mode))
+(if (eq system-type 'darwin)
+    (use-package terraform-mode
+      :demand t
+      :ensure-system-package (terraform .  hashicorp/tap/terraform)
+      :hook ((terraform-mode . terraform-format-on-save-mode)
+	     (terraform-mode . lsp-deferred)))
+  (use-package terraform-mode
+    :demand t
+    :ensure-system-package terraform
+    :hook ((terraform-mode . terraform-format-on-save-mode)
+	   (terraform-mode . lsp-deferred))))
 
 ;; Markup
 (use-package markdown-mode
@@ -132,17 +137,17 @@
   :demand t)
 
 ;; Ansible
-(use-package ansible
-  :if (eq system-type 'darwin)
-  :demand t
-  :ensure-system-package ansible
-  :hook (yaml-mode-hook . ansible))
-
-(use-package ansible
-  :if (eq system-type 'gnu/linux)
-  :demand t
-  :ensure-system-package ("~/.local/bin/ansible" . "pip3 install --user ansible")
-  :hook (yaml-mode-hook . ansible))
+(if (eq system-type 'darwin)
+    (use-package ansible
+      :demand t
+      :ensure-system-package ansible
+      :hook ((yaml-mode-hook . ansible)
+	     (ansible-mode-hook . lsp-deferred)))
+  (use-package ansible
+    :demand t
+    :ensure-system-package ("~/.local/bin/ansible" . "pip3 install --user ansible")
+    :hook ((yaml-mode-hook . ansible)
+	   (ansible-mode-hook . lsp-deferred))))
 
 (use-package ansible-doc
   :demand t
