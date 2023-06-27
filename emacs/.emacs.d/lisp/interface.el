@@ -19,12 +19,6 @@
 					"Go to kanban"
 					(lambda (&rest _)
 					  (browse-url "https://adaptiveweb.atlassian.net/jira/software/c/projects/DEVO/boards/171")))
-				       ;; Pantheon
-				       (,(all-the-icons-wicon "lightning" :height 0.9 :v-adjust 0.0)
-					"Pantheon"
-					"Go to the Adaptive UK organisation"
-					(lambda (&rest _)
-					  (browse-url "https://dashboard.pantheon.io/organizations/05ffca43-9041-4bb4-8a31-94c37e52ba1f")))
 				       ;; GitLab
 				       (,(all-the-icons-faicon "gitlab" :height 0.9 :v-adjust 0.0)
 					"GitLab"
@@ -87,6 +81,10 @@
 (use-package which-key
   :demand t
   :config (which-key-mode))
+
+(use-package kubernetes
+  :demand t
+  :ensure-system-package kubectl)
 
 (use-package emacs
   :elpaca nil
