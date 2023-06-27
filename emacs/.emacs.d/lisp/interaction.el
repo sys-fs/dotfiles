@@ -15,9 +15,7 @@
 	 ("C-d" . delete-char)
 	 ("C-k" . kill-line)
 	 ("C-S-k" . ergoemacs-kill-line-backward)
-	 ("M-;" . comment-or-uncomment-region)
-	 ("M-c" . ergoemacs-copy-line-or-region)
-	 ("M-v" . ergoemacs-paste))))
+	 ("M-;" . comment-or-uncomment-region))))
 
 (use-package projectile
   :demand t
@@ -36,6 +34,7 @@
 
 (use-package emacs
   :elpaca nil
+  :ensure-system-package ispell
   :config
   (setq-default save-place t
 		fill-column 79
@@ -66,6 +65,7 @@
 	  browse-url-generic-program "open"))
   (electric-indent-mode t)
   :hook
-  ((before-save . delete-trailing-whitespace)))
+  ((before-save . delete-trailing-whitespace)
+   (text-mode . flyspell-mode)))
 
 (provide 'interaction)
