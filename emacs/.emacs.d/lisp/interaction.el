@@ -17,21 +17,6 @@
 	 ("C-S-k" . ergoemacs-kill-line-backward)
 	 ("M-;" . comment-or-uncomment-region))))
 
-(use-package projectile
-  :demand t
-  :config (projectile-mode t)
-  :bind (:map ergoemacs-user-keymap
-	      ("<menu> p" . projectile-command-map)))
-
-(use-package google-this
-  :demand t
-  :config (google-this-mode)
-  :bind (:map ergoemacs-user-keymap ("<menu> g". google-this-mode-submap)))
-
-(use-package ripgrep
-  :demand t
-  :ensure-system-package (rg . ripgrep))
-
 (use-package emacs
   :elpaca nil
   :ensure-system-package ispell

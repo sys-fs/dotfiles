@@ -19,6 +19,4 @@
 		  (centaur-tabs-change-fonts "Monaco" 120)
 		(centaur-tabs-change-fonts "terminus" 120))))
 
-;; (setq epa-pinentry-mode 'loopback)
-
 (elpaca nil (server-start))

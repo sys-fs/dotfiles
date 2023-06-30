@@ -1,3 +1,74 @@
+(use-package company
+  :demand t
+  :config (global-company-mode t))
+
+(use-package company-statistics
+  :demand t
+  :config (company-statistics-mode))
+
+(use-package company-quickhelp
+  :demand t
+  :config (company-quickhelp-mode))
+
+(use-package flycheck
+  :demand t
+  :config (global-flycheck-mode t))
+
+(use-package lsp-mode
+  :demand t
+  :init
+  (setq lsp-keymap-prefix "<menu> l"
+	lsp-prefer-flymake nil
+	lsp-diagnostics-provider :none)
+  :config (unbind-key "<mouse-3>" lsp-mode-map)
+  :hook ((lsp-mode . lsp-enable-which-key-integration))
+  :bind
+  (:map lsp-mode-map ([<mouse-3>] . mouse-save-then-kill))
+  :commands lsp)
+
+(use-package lsp-ui
+  :demand t
+  :commands lsp-ui-mode)
+
+(use-package helm-lsp
+  :demand t
+  :commands helm-lsp-workspace-symbol)
+
+(use-package magit
+  :demand t
+  :bind ("C-x g" . magit-status))
+
+(use-package projectile
+  :demand t
+  :config (projectile-mode t)
+  :bind (:map ergoemacs-user-keymap
+	      ("<menu> p" . projectile-command-map)))
+
+(use-package google-this
+  :demand t
+  :config (google-this-mode)
+  :bind (:map ergoemacs-user-keymap ("<menu> g". google-this-mode-submap)))
+
+(use-package ripgrep
+  :demand t
+  :ensure-system-package (rg . ripgrep))
+
+(use-package password-store
+  :demand t
+  :config (setq epg-pinentry-mode 'loopback))
+
+(use-package yasnippet
+  :demand t
+  :config
+  (yas-reload-all)
+  (yas-global-mode t)
+  :bind
+  (:map yas-minor-mode-map
+	([tab] . nil)
+	("TAB" . nil)
+	("<tab>" . nil)
+	:map ergoemacs-user-keymap ("C-'" . yas-expand)))
+
 (use-package all-the-icons
   :demand t
   :if (display-graphic-p))
