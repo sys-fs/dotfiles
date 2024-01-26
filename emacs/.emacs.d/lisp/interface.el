@@ -1,3 +1,7 @@
+(use-package smartparens
+  :demand t
+  :config (smartparens-global-mode))
+
 (use-package company
   :demand t
   :config (global-company-mode t))
@@ -6,13 +10,41 @@
   :demand t
   :config (company-statistics-mode))
 
-(use-package company-quickhelp
-  :demand t
-  :config (company-quickhelp-mode))
+;; (use-package company-quickhelp
+;;   :demand t
+;;   :config (company-quickhelp-mode))
 
 (use-package flycheck
   :demand t
-  :config (global-flycheck-mode t))
+  :config
+  (global-flycheck-mode t)
+  (setq flycheck-checker-error-threshold 1000))
+
+;; (use-package dap-mode
+;;   :demand t
+;;   :config
+;;   (defvar tfm/dap-mode-command-map (let ((map (make-sparse-keymap)))
+;;                                      (define-key map (kbd "b") #'dap-ui-breakpoints-list)
+;;                                      (define-key map (kbd "c") #'dap-continue)
+;;                                      (define-key map (kbd "d") #'dap-debug)
+;;                                      (define-key map (kbd "i") #'dap-step-in)
+;;                                      (define-key map (kbd "k") #'dap-breakpoint-delete-all)
+;;                                      (define-key map (kbd "l") #'dap-ui-locals)
+;;                                      (define-key map (kbd "n") #'dap-next)
+;;                                      (define-key map (kbd "o") #'dap-step-out)
+;;                                      (define-key map (kbd "r") #'dap-ui-repl)
+;;                                      (define-key map (kbd "s") #'dap-ui-sessions)
+;;                                      (define-key map (kbd "z") #'dap-disconnect)
+;;                                      map)
+;;     "Custom command map for use with dap-mode.")
+;;   (fset 'tfm/dap-mode-command-map tfm/dap-mode-command-map)
+;;   (require 'dap-python)
+;;   (require 'dap-dlv-go)
+;;   (setq dap-python-executable "python3"
+;; 	dap-python-debugger 'debugpy
+;; 	dap-auto-configure-features '(tooltip))
+;;   :bind
+;;   (:map ergoemacs-user-keymap ("<menu> d" . tfm/dap-mode-command-map)))
 
 (use-package lsp-mode
   :demand t
@@ -20,10 +52,14 @@
   (setq lsp-keymap-prefix "<menu> l"
 	lsp-prefer-flymake nil
 	lsp-diagnostics-provider :none)
-  :config (unbind-key "<mouse-3>" lsp-mode-map)
+  :config
+  (unbind-key "<mouse-3>" lsp-mode-map)
+  (fset 'lsp-command-map lsp-command-map)
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :bind
-  (:map lsp-mode-map ([<mouse-3>] . mouse-save-then-kill))
+  (:map lsp-mode-map
+	([<mouse-3>] . mouse-save-then-kill)
+	("<menu> l" . lsp-command-map))
   :commands lsp)
 
 (use-package lsp-ui
@@ -33,6 +69,9 @@
 (use-package helm-lsp
   :demand t
   :commands helm-lsp-workspace-symbol)
+
+(use-package taskrunner
+  :demand t)
 
 (use-package magit
   :demand t
@@ -83,30 +122,8 @@
   (setq dashboard-projects-backend 'projectile
 	dashboard-items '((recents . 25)
 			  (projects . 25))
-	dashboard-set-navigator nil
-	dashboard-navigator-buttons `((;; Kanban
-				       (,(all-the-icons-faicon "cogs" :height 0.9 :v-adjust 0.0)
-					"JIRA"
-					"Go to kanban"
-					(lambda (&rest _)
-					  (browse-url "https://adaptiveweb.atlassian.net/jira/software/c/projects/DEVO/boards/171")))
-				       ;; GitLab
-				       (,(all-the-icons-faicon "gitlab" :height 0.9 :v-adjust 0.0)
-					"GitLab"
-					"Go to the adaptive-web group"
-					(lambda (&rest _)
-					  (browse-url "https://gitlab.com/adaptive-web"))))))
+	dashboard-set-navigator nil)
   (dashboard-setup-startup-hook))
-
-(use-package centaur-tabs
-  :demand t
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-set-modified-marker t
-      centaur-tabs-modified-marker "*"
-      centaur-tabs-style "bar"
-      centaur-tabs-set-icons t
-      centaur-tabs-gray-out-icons 'buffer))
 
 (use-package doom-modeline
   :demand t
@@ -124,6 +141,8 @@
   (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
   (define-key global-map [remap execute-extended-command] 'helm-M-x)
   (define-key global-map [remap apropos-command] 'helm-apropos))
+
+(use-package helm-rg :demand t)
 
 (use-package zoom
   :demand t
@@ -157,6 +176,9 @@
   :demand t
   :ensure-system-package kubectl)
 
+(use-package docker
+  :demand t)
+
 (use-package emacs
   :elpaca nil
   :config
@@ -174,7 +196,8 @@
   (line-number-mode t)
   (column-number-mode t)
   (show-paren-mode t)
-  (menu-bar-mode -1)
+  (if (not (eq system-type 'darwin))
+      (menu-bar-mode -1))
   (blink-cursor-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)

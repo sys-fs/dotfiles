@@ -7,7 +7,7 @@
 
   (if (eq system-type 'darwin)
       (setq mac-command-modifier 'meta
-	    mac-option-modifier 'super))
+	    mac-option-modifier 'none))
   :bind
   ((:map ergoemacs-user-keymap
 	 ("C-a" . move-beginning-of-line)
@@ -16,6 +16,11 @@
 	 ("C-k" . kill-line)
 	 ("C-S-k" . ergoemacs-kill-line-backward)
 	 ("M-;" . comment-or-uncomment-region))))
+
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
 
 (use-package emacs
   :elpaca nil
@@ -37,7 +42,6 @@
 	ediff-window-setup-function 'ediff-setup-windows-plain
 	require-final-newline t
 	load-prefer-newer t
-	browse-url-browser-function 'browse-url-xdg-open
 	inhibit-startup-message t
 	auth-sources '((:source "~/.emacs.d/authinfo.gpg")))
   ;; Ergodox

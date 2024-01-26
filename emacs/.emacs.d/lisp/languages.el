@@ -13,15 +13,26 @@
   (setq inferior-lisp-program "sbcl")
   (slime-setup '(slime-fancy)))
 
+;; Docker
+(use-package dockerfile-mode
+  :demand t)
+
 ;; Python
 (use-package elpy
   :demand t
-  :init (elpy-enable))
+  :init (elpy-enable)
+  :config (setq elpy-formatter 'black)
+  :hook (elpy-mode . (lambda ()
+                       (add-hook 'before-save-hook
+                                 'elpy-black-fix-code nil t))))
 
 (use-package python-mode
   :elpaca nil
-  :config (setq flycheck-python-pycompile-executable "python3"
-		flycheck-python-flake8-executable "python3")
+  :config
+  (setq flycheck-python-pycompile-executable "python3"
+	flycheck-python-pylint-executable "python3"
+	fill-column 120)
+  (add-to-list 'flycheck-disabled-checkers 'python-flake8)
   :hook (python-mode . lsp-deferred))
 
 (if (eq system-type 'darwin)
@@ -54,21 +65,21 @@
     (use-package terraform-mode
       :demand t
       :ensure-system-package (terraform .  hashicorp/tap/terraform)
-      :config (sp-local-pair 'terraform-mode "/*" "*/" :post-handlers '((" | " "SPC")
-									("* ||\n[i]" "RET")))
       :hook ((terraform-mode . terraform-format-on-save-mode)
 	     (terraform-mode . lsp-deferred)))
   (use-package terraform-mode
     :demand t
     :ensure-system-package terraform
-    :config (sp-local-pair 'terraform-mode "/*" "*/" :post-handlers '((" | " "SPC")
-								      ("* ||\n[i]" "RET")))
     :hook ((terraform-mode . terraform-format-on-save-mode)
 	   (terraform-mode . lsp-deferred))))
 
 ;; Markup
 (use-package markdown-mode
   :demand t)
+
+(use-package pandoc
+  :demand t
+  :ensure-system-package pandoc)
 
 ;; Data formats
 (use-package json-mode
@@ -96,5 +107,14 @@
 
 (use-package jinja2-mode
   :demand t)
+
+;; Web development
+(use-package web-mode
+  :demand t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.gohtml\\'" . web-mode))
+  (setq web-mode-engines-alist '(("go" . "\\.gohtml\\'")))
+  :hook (web-mode . (lambda ()
+		      (indent-tabs-mode nil))))
 
 (provide 'languages)
