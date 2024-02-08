@@ -33,7 +33,7 @@
 	flycheck-python-pylint-executable "python3"
 	fill-column 120)
   (add-to-list 'flycheck-disabled-checkers 'python-flake8)
-  :hook (python-mode . lsp-deferred))
+  :hook (python-mode . lsp))
 
 (if (eq system-type 'darwin)
     (use-package poetry
@@ -49,7 +49,7 @@
 (use-package php-mode
   :demand t
   :config
-  (setq lsp-intelephense-licence-key (password-store-get "intelephense"))
+  ;; (setq lsp-intelephense-licence-key (password-store-get "intelephense"))
   (add-to-list 'lsp--formatting-indent-alist '(php-mode . 2)))
 
 ;; Golang
@@ -57,7 +57,7 @@
   :demand t
   :ensure-system-package ((go . go)
 			  ("~/go/bin/gopls" . "go install golang.org/x/tools/gopls@latest"))
-  :hook ((go-mode . lsp-deferred)
+  :hook ((go-mode . lsp)
 	 (go-mode . gofmt-before-save)))
 
 ;; Terraform
@@ -66,12 +66,12 @@
       :demand t
       :ensure-system-package (terraform .  hashicorp/tap/terraform)
       :hook ((terraform-mode . terraform-format-on-save-mode)
-	     (terraform-mode . lsp-deferred)))
+	     (terraform-mode . lsp)))
   (use-package terraform-mode
     :demand t
     :ensure-system-package terraform
     :hook ((terraform-mode . terraform-format-on-save-mode)
-	   (terraform-mode . lsp-deferred))))
+	   (terraform-mode . lsp))))
 
 ;; Markup
 (use-package markdown-mode
@@ -94,12 +94,12 @@
       :demand t
       :ensure-system-package ansible
       :hook ((yaml-mode-hook . ansible)
-	     (ansible-mode-hook . lsp-deferred)))
+	     (ansible-mode-hook . lsp)))
   (use-package ansible
     :demand t
     :ensure-system-package ("~/.local/bin/ansible" . "pip3 install --user ansible")
     :hook ((yaml-mode-hook . ansible)
-	   (ansible-mode-hook . lsp-deferred))))
+	   (ansible-mode-hook . lsp))))
 
 (use-package ansible-doc
   :demand t
