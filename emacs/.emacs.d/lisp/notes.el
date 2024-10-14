@@ -1,5 +1,5 @@
 (use-package org-roam
-  :demand t
+  :ensure t
   :config
   (mapc (lambda (directory)
 	  (unless (file-exists-p directory)
@@ -62,12 +62,12 @@
   :bind
   (:map ergoemacs-user-keymap ("<menu> r" . tfm/org-roam-command-map)))
 
-(use-package org-roam-ui :demand t)
+(use-package org-roam-ui :ensure t)
 
-(use-package ox-reveal :demand t)
+(use-package ox-reveal :ensure t)
 
 (use-package org-ref
-  :demand t
+  :ensure t
   :config
   (setq bibtex-completion-bibliography '("~/org-roam/bibliography.bib")))
 

@@ -1,13 +1,13 @@
 ;; C
 (use-package cc-mode
-  :elpaca nil
+  :ensure nil
   :hook ((c-mode-common-hook . (lambda ()
 				(setq indent-tabs-mode t)
 				(c-set-style "linux")))))
 
 ;; Common Lisp
 (use-package slime
-  :demand t
+  :ensure t
   :ensure-system-package sbcl
   :config
   (setq inferior-lisp-program "sbcl")
@@ -15,19 +15,25 @@
 
 ;; Docker
 (use-package dockerfile-mode
-  :demand t)
+  :ensure t)
+
+;; Groovy
+(use-package groovy-mode
+  :ensure t)
 
 ;; Python
 (use-package elpy
-  :demand t
+  :ensure t
   :init (elpy-enable)
-  :config (setq elpy-formatter 'black)
+  :config
+  (setq elpy-formatter 'black)
+  (remove-hook 'elpy-modules 'elpy-module-flymake)
   :hook (elpy-mode . (lambda ()
                        (add-hook 'before-save-hook
                                  'elpy-black-fix-code nil t))))
 
 (use-package python-mode
-  :elpaca nil
+  :ensure nil
   :config
   (setq flycheck-python-pycompile-executable "python3"
 	flycheck-python-pylint-executable "python3"
@@ -37,84 +43,79 @@
 
 (if (eq system-type 'darwin)
     (use-package poetry
-      :demand t
+      :ensure t
       :ensure-system-package ("/opt/homebrew/bin/poetry" . "pip3 install poetry")
       :hook (python-mode-hook . poetry-tracking-mode))
   (use-package poetry
-    :demand t
+    :ensure t
     :ensure-system-package ("~/.local/bin/poetry" . "pip3 install --user poetry")
     :hook (python-mode-hook . poetry-tracking-mode)))
 
-;; PHP
-(use-package php-mode
-  :demand t
-  :config
-  ;; (setq lsp-intelephense-licence-key (password-store-get "intelephense"))
-  (add-to-list 'lsp--formatting-indent-alist '(php-mode . 2)))
-
 ;; Golang
 (use-package go-mode
-  :demand t
+  :ensure t
   :ensure-system-package ((go . go)
 			  ("~/go/bin/gopls" . "go install golang.org/x/tools/gopls@latest"))
   :hook ((go-mode . lsp)
-	 (go-mode . gofmt-before-save)))
+	 (before-save . gofmt-before-save)))
 
 ;; Terraform
 (if (eq system-type 'darwin)
     (use-package terraform-mode
-      :demand t
-      :ensure-system-package (terraform .  hashicorp/tap/terraform)
+      :ensure t
       :hook ((terraform-mode . terraform-format-on-save-mode)
 	     (terraform-mode . lsp)))
   (use-package terraform-mode
-    :demand t
+    :ensure t
     :ensure-system-package terraform
     :hook ((terraform-mode . terraform-format-on-save-mode)
 	   (terraform-mode . lsp))))
 
 ;; Markup
 (use-package markdown-mode
-  :demand t)
+  :ensure t)
 
 (use-package pandoc
-  :demand t
+  :ensure t
   :ensure-system-package pandoc)
 
 ;; Data formats
 (use-package json-mode
-  :demand t)
+  :ensure t)
 
 (use-package yaml-mode
-  :demand t)
+  :ensure t)
 
 ;; Ansible
 (if (eq system-type 'darwin)
     (use-package ansible
-      :demand t
+      :ensure t
       :ensure-system-package ansible
       :hook ((yaml-mode-hook . ansible)
 	     (ansible-mode-hook . lsp)))
   (use-package ansible
-    :demand t
+    :ensure t
     :ensure-system-package ("~/.local/bin/ansible" . "pip3 install --user ansible")
     :hook ((yaml-mode-hook . ansible)
 	   (ansible-mode-hook . lsp))))
 
 (use-package ansible-doc
-  :demand t
+  :ensure t
   :hook (ansible-mode-hook . ansible-doc-mode))
 
 (use-package jinja2-mode
-  :demand t)
+  :ensure t)
 
 ;; Web development
 (use-package web-mode
-  :demand t
+  :ensure t
   :config
   (add-to-list 'auto-mode-alist '("\\.gohtml\\'" . web-mode))
-  (setq web-mode-engines-alist '(("go" . "\\.gohtml\\'")))
-  :hook (web-mode . (lambda ()
-		      (indent-tabs-mode nil))))
+  (setq web-mode-engines-alist '(("go" . "\\.gohtml\\'"))
+	web-mode-enable-auto-pairing nil))
+
+(use-package company-web
+  :ensure t
+  :config (require 'company-web-html))
 
 (provide 'languages)

@@ -10,6 +10,8 @@
 (require 'interface)
 (require 'notes)
 (require 'languages)
+(require 'keys)
 
-(elpaca nil (server-start))
+(server-start)
 (put 'downcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)

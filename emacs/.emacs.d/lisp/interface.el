@@ -1,53 +1,77 @@
 (use-package smartparens
-  :demand t
-  :config (smartparens-global-mode))
+  :ensure t
+  :config
+  (smartparens-global-mode))
 
 (use-package company
-  :demand t
+  :ensure t
   :config (global-company-mode t))
 
 (use-package company-statistics
-  :demand t
+  :ensure t
   :config (company-statistics-mode))
 
 ;; (use-package company-quickhelp
-;;   :demand t
+;;   :ensure t
 ;;   :config (company-quickhelp-mode))
 
 (use-package flycheck
-  :demand t
+  :ensure t
   :config
   (global-flycheck-mode t)
   (setq flycheck-checker-error-threshold 1000))
 
-;; (use-package dap-mode
-;;   :demand t
-;;   :config
-;;   (defvar tfm/dap-mode-command-map (let ((map (make-sparse-keymap)))
-;;                                      (define-key map (kbd "b") #'dap-ui-breakpoints-list)
-;;                                      (define-key map (kbd "c") #'dap-continue)
-;;                                      (define-key map (kbd "d") #'dap-debug)
-;;                                      (define-key map (kbd "i") #'dap-step-in)
-;;                                      (define-key map (kbd "k") #'dap-breakpoint-delete-all)
-;;                                      (define-key map (kbd "l") #'dap-ui-locals)
-;;                                      (define-key map (kbd "n") #'dap-next)
-;;                                      (define-key map (kbd "o") #'dap-step-out)
-;;                                      (define-key map (kbd "r") #'dap-ui-repl)
-;;                                      (define-key map (kbd "s") #'dap-ui-sessions)
-;;                                      (define-key map (kbd "z") #'dap-disconnect)
-;;                                      map)
-;;     "Custom command map for use with dap-mode.")
-;;   (fset 'tfm/dap-mode-command-map tfm/dap-mode-command-map)
-;;   (require 'dap-python)
-;;   (require 'dap-dlv-go)
-;;   (setq dap-python-executable "python3"
-;; 	dap-python-debugger 'debugpy
-;; 	dap-auto-configure-features '(tooltip))
-;;   :bind
-;;   (:map ergoemacs-user-keymap ("<menu> d" . tfm/dap-mode-command-map)))
+(use-package aweshell
+  :ensure (:host github :repo "manateelazycat/aweshell")
+  :config
+  (defvar tfm/aweshell-command-map (let ((map (make-sparse-keymap)))
+                                     (define-key map (kbd "s") #'aweshell-new)
+                                     (define-key map (kbd "n") #'aweshell-next)
+                                     (define-key map (kbd "p") #'aweshell-prev)
+                                     (define-key map (kbd "t") #'aweshell-dedicated-toggle)
+                                     (define-key map (kbd "r") #'aweshell-sudo-toggle)
+                                     (define-key map (kbd "b") #'aweshell-switch-buffer)
+                                     map)
+    "Custom command map for use with aweshell.")
+  (fset 'tfm/aweshell-command-map tfm/aweshell-command-map)
+  (setq eshell-prompt-function 'epe-theme-lambda)
+  :bind
+  (:map ergoemacs-user-keymap ("<menu> s" . tfm/aweshell-command-map)))
+
+(use-package eshell-up
+  :ensure t
+  :config
+  (setq eshell-up-ignore-case nil
+        eshell-up-print-parent-dir t))
+
+(use-package dap-mode
+  :ensure t
+  :config
+  (defvar tfm/dap-mode-command-map (let ((map (make-sparse-keymap)))
+                                     (define-key map (kbd "b") #'dap-ui-breakpoints-list)
+                                     (define-key map (kbd "c") #'dap-continue)
+                                     (define-key map (kbd "d") #'dap-debug)
+                                     (define-key map (kbd "i") #'dap-step-in)
+                                     (define-key map (kbd "k") #'dap-breakpoint-delete-all)
+                                     (define-key map (kbd "l") #'dap-ui-locals)
+                                     (define-key map (kbd "n") #'dap-next)
+                                     (define-key map (kbd "o") #'dap-step-out)
+                                     (define-key map (kbd "r") #'dap-ui-repl)
+                                     (define-key map (kbd "s") #'dap-ui-sessions)
+                                     (define-key map (kbd "z") #'dap-disconnect)
+                                     map)
+    "Custom command map for use with dap-mode.")
+  (fset 'tfm/dap-mode-command-map tfm/dap-mode-command-map)
+  (require 'dap-python)
+  (require 'dap-dlv-go)
+  (setq dap-python-executable "python3"
+	dap-python-debugger 'debugpy
+	dap-auto-configure-features '(tooltip))
+  :bind
+  (:map ergoemacs-user-keymap ("<menu> d" . tfm/dap-mode-command-map)))
 
 (use-package lsp-mode
-  :demand t
+  :ensure t
   :init
   (setq lsp-keymap-prefix "<menu> l"
 	lsp-prefer-flymake nil
@@ -55,6 +79,13 @@
   :config
   (unbind-key "<mouse-3>" lsp-mode-map)
   (fset 'lsp-command-map lsp-command-map)
+  (add-to-list 'lsp-language-id-configuration '(".*\\.gohtml$" . "html"))
+  (add-to-list 'lsp-language-id-configuration '(".*\\.html$" . "html"))
+  (add-to-list 'lsp-language-id-configuration '(".*\\.css$" . "css"))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection "html-ls")
+		    :activation-fn (lsp-activate-on "html")
+		    :server-id 'html-ls))
   :hook ((lsp-mode . lsp-enable-which-key-integration))
   :bind
   (:map lsp-mode-map
@@ -63,62 +94,58 @@
   :commands lsp)
 
 (use-package lsp-ui
-  :demand t
+  :ensure t
   :commands lsp-ui-mode)
 
 (use-package helm-lsp
-  :demand t
+  :ensure t
   :commands helm-lsp-workspace-symbol)
 
 (use-package taskrunner
-  :demand t)
+  :ensure t)
+
+(use-package transient
+  :ensure t)
 
 (use-package magit
-  :demand t
+  :ensure t
+  :after transient
   :bind ("C-x g" . magit-status))
 
 (use-package projectile
-  :demand t
+  :ensure t
   :config (projectile-mode t)
   :bind (:map ergoemacs-user-keymap
 	      ("<menu> p" . projectile-command-map)))
 
 (use-package google-this
-  :demand t
+  :ensure t
   :config (google-this-mode)
   :bind (:map ergoemacs-user-keymap ("<menu> g". google-this-mode-submap)))
 
 (use-package ripgrep
-  :demand t
+  :ensure t
   :ensure-system-package (rg . ripgrep))
 
-(use-package password-store
-  :demand t
-  :config (setq epg-pinentry-mode 'loopback))
-
 (use-package yasnippet
-  :demand t
+  :ensure t
   :config
   (yas-reload-all)
-  (yas-global-mode t)
-  :bind
-  (:map yas-minor-mode-map
-	([tab] . nil)
-	("TAB" . nil)
-	("<tab>" . nil)
-	:map ergoemacs-user-keymap ("C-'" . yas-expand)))
+  (yas-global-mode t))
 
 (use-package all-the-icons
-  :demand t
+  :ensure t
   :if (display-graphic-p))
 
 (use-package buffer-name-relative
-  :demand t
+  :ensure t
   :init (buffer-name-relative-mode))
 
 (use-package dashboard
-  :demand t
-  :init
+  :ensure t
+  :config
+  (add-hook 'elpaca-after-init-hook #'dashboard-insert-startupify-lists)
+  (add-hook 'elpaca-after-init-hook #'dashboard-initialize)
   (setq dashboard-projects-backend 'projectile
 	dashboard-items '((recents . 25)
 			  (projects . 25))
@@ -126,15 +153,16 @@
   (dashboard-setup-startup-hook))
 
 (use-package doom-modeline
-  :demand t
+  :ensure t
   :init
   (doom-modeline-mode 1))
 
 (use-package helm
-  :demand t
+  :ensure t
   :config
   (helm-mode 1)
   (helm-autoresize-mode 1)
+  (setq helm-move-to-line-cycle-in-source nil)
   (define-key global-map [remap find-file] 'helm-find-files)
   (define-key global-map [remap occur] 'helm-occur)
   (define-key global-map [remap list-buffers] 'helm-buffers-list)
@@ -142,56 +170,50 @@
   (define-key global-map [remap execute-extended-command] 'helm-M-x)
   (define-key global-map [remap apropos-command] 'helm-apropos))
 
-(use-package helm-rg :demand t)
+(use-package helm-rg :ensure t)
 
 (use-package zoom
-  :demand t
+  :ensure t
   :config
   (zoom-mode t)
   (setq zoom-size '(0.618 . 0.618)))
 
 (use-package drag-stuff
-  :demand t
+  :ensure t
   :config
   (drag-stuff-global-mode)
   (drag-stuff-define-keys))
 
 (use-package solarized-theme
-  :demand t
+  :ensure t
   :config (load-theme 'solarized-light t))
 
 (use-package rainbow-delimiters
-  :demand t
+  :ensure t
   :hook ((prog-mode . rainbow-delimiters-mode)))
 
 (use-package rainbow-mode
-  :demand t
+  :ensure t
   :config (rainbow-mode))
 
 (use-package which-key
-  :demand t
+  :ensure t
   :config (which-key-mode))
 
 (use-package kubernetes
-  :demand t
+  :ensure t
   :ensure-system-package kubectl)
 
 (use-package docker
-  :demand t)
+  :ensure t)
 
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :config
   (setq x-underline-at-descent-line t
 	frame-resize-pixelwise t)
   (if (eq system-type 'gnu/linux)
       (set-frame-font "terminus 12" t t))
-  (defun tfm/scroll-left ()
-    (interactive)
-    (scroll-left 1))
-  (defun tfm/scroll-right ()
-    (interactive)
-    (scroll-right 1))
   (display-line-numbers-mode t)
   (line-number-mode t)
   (column-number-mode t)

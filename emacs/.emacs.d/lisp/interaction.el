@@ -1,5 +1,6 @@
 (use-package ergoemacs-mode
-  :demand t
+  :ensure t
+  (:wait t)
   :config
   (setq ergoemacs-theme nil
 	ergoemacs-keyboard-layout "dv")
@@ -7,15 +8,7 @@
 
   (if (eq system-type 'darwin)
       (setq mac-command-modifier 'meta
-	    mac-option-modifier 'none))
-  :bind
-  ((:map ergoemacs-user-keymap
-	 ("C-a" . move-beginning-of-line)
-	 ("C-e" . move-end-of-line)
-	 ("C-d" . delete-char)
-	 ("C-k" . kill-line)
-	 ("C-S-k" . ergoemacs-kill-line-backward)
-	 ("M-;" . comment-or-uncomment-region))))
+	    mac-option-modifier 'none)))
 
 (use-package exec-path-from-shell
   :config
@@ -23,12 +16,13 @@
     (exec-path-from-shell-initialize)))
 
 (use-package emacs
-  :elpaca nil
+  :ensure nil
   :ensure-system-package ispell
   :config
   (setq-default save-place t
 		fill-column 79
-		tab-width 8)
+		tab-width 8
+                indent-tabs-mode nil)
   (if (not (boundp 'turn-on-orgtbl))
       (defun turn-on-orgtbl ()
 	(interactive)
@@ -43,7 +37,9 @@
 	require-final-newline t
 	load-prefer-newer t
 	inhibit-startup-message t
-	auth-sources '((:source "~/.emacs.d/authinfo.gpg")))
+	auth-sources '((:source "~/.emacs.d/authinfo.gpg"))
+        mouse-wheel-tilt-scroll t
+        mouse-wheel-flip-direction t)
   ;; Ergodox
   (define-key key-translation-map (kbd "<f13>") (kbd "<menu>"))
   ;; MacBook Pro
